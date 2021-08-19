@@ -1,0 +1,14 @@
+// SPDX-License-Identifier: GPL-2.0
+/*
+ * Snapdragon 720G (atoll-ab) specific device tree
+ *
+ * Copyright (c) 2021, The Linux Foundation. All rights reserved.
+ */
+
+#include "atoll.dtsi"
+
+/ {
+	model = "Qualcomm Technologies, Inc. ATOLL-AB";
+	qcom,msm-name = "ATOLL-AB";
+	qcom,msm-id = <443 0x0>;
+};

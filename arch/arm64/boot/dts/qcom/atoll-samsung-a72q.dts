@@ -7,9 +7,46 @@
 
 /dts-v1/;
 
-#include "atoll.dtsi"
+#include "atoll-ab.dtsi"
 
 / {
 	model = "Samsung Galaxy A72";
-	compatible = "samsung,a72q", "samsung,a72", "qcom,atoll";
+	compatible = "samsung,a72q", "samsung,a72", "qcom,atoll-ab";
+	qcom,board-id = <0x22 0x5>;
+
+	
+	reserved-memory {
+		#address-cells = <2>;
+		#size-cells = <2>;
+		ranges;
+
+		framebuffer_region@9c000000 {
+			reg = <0x0 0x9c000000 0x0 0x01800000>;
+			no-map;
+		};
+
+
+		ramoops@B4600000 {
+			compatible = "ramoops";
+			reg = <0x0 0xb4600000 0x0 0x100000>;
+			record-size = <0x40000>;
+			console-size = <0x40000>;
+			ftrace-size = <0x40000>;
+			pmsg-size = <0x40000>;
+		};
+	};
+
+	chosen {
+		#address-cells = <2>;
+		#size-cells = <2>;
+
+		framebuffer@0x9c000000 {
+			compatible = "simple-framebuffer";
+			reg = <0x0 0x9c000000 0x0 (1080 * 2400 * 4)>;
+			width = <1080>;
+			height = <2400>;
+			stride = <(1080 * 4)>;
+			format = "a8r8g8b8";
+		};
+	};
 };
