@@ -44,7 +44,7 @@
 	chosen {
 		#address-cells = <2>;
 		#size-cells = <2>;
-
+		ranges;
 		framebuffer@0x9c000000 {
 			compatible = "simple-framebuffer";
 			reg = <0x0 0x9c000000 0x0 (1080 * 2400 * 4)>;
