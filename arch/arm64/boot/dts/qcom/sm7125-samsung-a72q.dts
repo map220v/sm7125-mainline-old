@@ -17,6 +17,7 @@
 / {
 	model = "Samsung Galaxy A72";
 	compatible = "samsung,a72q", "qcom,sm7125";
+	qcom,board-id = <0x22 0x5>;
 	
 	reserved-memory {
 		#address-cells = <2>;
