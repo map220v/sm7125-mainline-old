@@ -357,6 +357,14 @@
 		dma-ranges = <0 0 0 0 0x10 0>;
 		compatible = "simple-bus";
 
+		gcc: clock-controller@100000 {
+			compatible = "qcom,gcc-sm7125";
+			reg = <0 0x00100000 0 0x1f0000>;
+			#clock-cells = <1>;
+			#reset-cells = <1>;
+			#power-domain-cells = <1>;
+		};
+
 		intc: interrupt-controller@17a00000 {
 			compatible = "arm,gic-v3";
 			#address-cells = <2>;
@@ -381,6 +389,7 @@
 		pdc: interrupt-controller@b220000 {
 			compatible = "qcom,sdm7125-pdc", "qcom,pdc";
 			reg = <0 0x0b220000 0 0x30000>;
+			//qcom,pdc-ranges = <0 480 94>, <94 609 31>, <125 63 1>;
 			qcom,pdc-ranges = <0 512 94>, <94 641 31>, <125 95 1>;
 			#interrupt-cells = <2>;
 			interrupt-parent = <&intc>;
