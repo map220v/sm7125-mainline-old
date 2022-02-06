@@ -75,9 +75,19 @@
 			regulator-max-microvolt = <1904000>;
 		};
 
+		vreg_l12a: ldo12 {
+			regulator-min-microvolt = <1696000>;
+			regulator-max-microvolt = <1950000>;
+		};
+
 		vreg_l17a: ldo17 {
 			regulator-min-microvolt = <2920000>;
 			regulator-max-microvolt = <3232000>;
+		};
+
+		vreg_l19a: ldo19 {
+			regulator-min-microvolt = <2696000>;
+			regulator-max-microvolt = <2960000>;
 		};
 	};
 
@@ -90,6 +100,29 @@
 			regulator-max-microvolt = <1304000>;
 		};
 	};
+};
+
+//Disabled until iommu for UFS found.
+&apps_smmu {
+	status = "disabled";
+};
+
+&ufs_mem_hc {
+	status = "okay";
+
+	vcc-supply = <&vreg_l19a>;
+	vcc-max-microamp = <600000>;
+	vccq2-supply = <&vreg_l12a>;
+	vccq2-max-microamp = <600000>;
+};
+
+&ufs_mem_phy {
+	status = "okay";
+
+	vdda-phy-supply = <&vreg_l4a>;
+	vdda-pll-supply = <&vreg_l3c>;
+	vdda-phy-max-microamp = <62900>;
+	vdda-pll-max-microamp = <18300>;
 };
 
 &usb_1 {
@@ -109,6 +142,6 @@
 
 &usb_1_qmpphy {
 	status = "okay";
-	vdda-phy-supply = <&vreg_l3c>;
-	vdda-pll-supply = <&vreg_l4a>;
+	vdda-phy-supply = <&vreg_l4a>;
+	vdda-pll-supply = <&vreg_l3c>;
 };
