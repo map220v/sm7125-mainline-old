@@ -522,14 +522,14 @@
 			};
 		};
 
-		/*pdc: interrupt-controller@b220000 {
-			compatible = "qcom,sdm7125-pdc", "qcom,pdc";
+		pdc: interrupt-controller@b220000 {
+			compatible = "qcom,sc7180-pdc", "qcom,pdc";
 			reg = <0 0x0b220000 0 0x30000>;
 			qcom,pdc-ranges = <0 480 94>, <94 609 31>, <125 63 1>;
 			#interrupt-cells = <2>;
 			interrupt-parent = <&intc>;
 			interrupt-controller;
-		};*/
+		};
 
 		timer@17c20000{
 			#address-cells = <2>;
@@ -598,7 +598,7 @@
 				  <0 0xc40a000 0 0x26000>;
 			reg-names = "core", "chnls", "obsrvr", "intr", "cnfg";
 			interrupt-names = "periph_irq";
-			interrupts = <GIC_SPI 481 IRQ_TYPE_LEVEL_HIGH>;//<&pdc 1 IRQ_TYPE_LEVEL_HIGH>; //causes: IRQ periph_irq not found
+			interrupts = <GIC_SPI 481 IRQ_TYPE_LEVEL_HIGH>;
 			qcom,ee = <0>;
 			qcom,channel = <0>;
 			#address-cells = <1>;
@@ -736,13 +736,6 @@
 				#phy-cells = <0>;
 			};
 		};
-		
-		gem_noc: interconnect@9680000 {
-			compatible = "qcom,sc7180-gem-noc";
-			reg = <0 0x09680000 0 0x3e200>;
-			#interconnect-cells = <2>;
-			qcom,bcm-voters = <&apps_bcm_voter>;
-		};
 
 		usb_1: usb@a6f8800 {
 			compatible = "qcom,sc7180-dwc3", "qcom,dwc3";
@@ -766,9 +759,9 @@
 			assigned-clock-rates = <19200000>, <150000000>;
 
 			interrupts-extended = <&intc GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH>,
-					      <&intc GIC_SPI 486 IRQ_TYPE_LEVEL_HIGH>,
-					      <&intc GIC_SPI 488 IRQ_TYPE_LEVEL_HIGH>,
-					      <&intc GIC_SPI 489 IRQ_TYPE_LEVEL_HIGH>;
+					      <&pdc 6 IRQ_TYPE_LEVEL_HIGH>,
+					      <&pdc 8 IRQ_TYPE_LEVEL_HIGH>,
+					      <&pdc 9 IRQ_TYPE_LEVEL_HIGH>;
 			interrupt-names = "hs_phy_irq", "ss_phy_irq",
 					  "dm_hs_phy_irq", "dp_hs_phy_irq";
 
