@@ -107,6 +107,10 @@
 	status = "disabled";
 };
 
+&tlmm {
+	gpio-reserved-ranges = <59 4>;
+};
+
 &ufs_mem_hc {
 	status = "okay";
 

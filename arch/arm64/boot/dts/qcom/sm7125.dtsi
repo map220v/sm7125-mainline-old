@@ -522,6 +522,21 @@
 			};
 		};
 
+		tlmm: pinctrl@3500000 {
+			compatible = "qcom,sc7180-pinctrl";
+			reg = <0 0x03500000 0 0x300000>,
+			      <0 0x03900000 0 0x300000>,
+			      <0 0x03d00000 0 0x300000>;
+			reg-names = "west", "north", "south";
+			interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
+			gpio-controller;
+			#gpio-cells = <2>;
+			interrupt-controller;
+			#interrupt-cells = <2>;
+			gpio-ranges = <&tlmm 0 0 120>;
+			wakeup-parent = <&pdc>;
+		};
+
 		pdc: interrupt-controller@b220000 {
 			compatible = "qcom,sc7180-pdc", "qcom,pdc";
 			reg = <0 0x0b220000 0 0x30000>;
