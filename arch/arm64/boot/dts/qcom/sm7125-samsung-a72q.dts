@@ -14,9 +14,12 @@
 #include "pm6150.dtsi"
 #include "pm6150l.dtsi"
 
+/delete-node/ &rmtfs_mem;
+
 / {
 	model = "Samsung Galaxy A72";
 	compatible = "samsung,a72q", "qcom,sm7125";
+	qcom,msm-id = <443 0x0>;
 	qcom,board-id = <0x22 0x5>;
 	
 	reserved-memory {
@@ -29,6 +32,20 @@
 			no-map;
 		};
 
+		mpss_mem: memory@86000000 {
+			reg = <0x0 0x8b000000 0x0 0x8900000>;
+			no-map;
+		};
+
+		venus_mem: memory@8ee00000 {
+			reg = <0 0x98400000 0 0x500000>;
+			no-map;
+		};
+
+		wlan_mem: memory@93900000 {
+			reg = <0x0 0x93900000 0x0 0x200000>;
+			no-map;
+		};
 
 		ramoops@B4600000 {
 			compatible = "ramoops";
@@ -37,6 +54,14 @@
 			console-size = <0x40000>;
 			ftrace-size = <0x40000>;
 			pmsg-size = <0x40000>;
+		};
+
+		rmtfs_mem: memory@f3701000 {
+			compatible = "qcom,rmtfs-mem";
+			reg = <0 0xf3701000 0 0x200000>;
+			no-map;
+
+			qcom,client-id = <1>;
 		};
 	};
 
@@ -52,10 +77,16 @@
 			stride = <(1080 * 4)>;
 			format = "a8r8g8b8";
 			/*
-			 * That's (going to be) a lot of clocks, but it's necessary due
-			 * to unused clk cleanup & no panel driver yet (& no dispcc either)..
+			 * That's a lot of clocks, but it's necessary due
+			 * to unused clk cleanup & no panel driver yet..
 			 */
-			clocks = <&gcc GCC_DISP_HF_AXI_CLK>;
+			clocks = <&gcc GCC_DISP_HF_AXI_CLK>,
+				 <&dispcc DISP_CC_MDSS_BYTE0_CLK>,
+				 <&dispcc DISP_CC_MDSS_BYTE0_INTF_CLK>,
+				 <&dispcc DISP_CC_MDSS_MDP_CLK>,
+				 <&dispcc DISP_CC_MDSS_PCLK0_CLK>,
+				 <&dispcc DISP_CC_MDSS_VSYNC_CLK>;
+			power-domains = <&dispcc MDSS_GDSC>;
 		};
 	};
 };
@@ -148,4 +179,16 @@
 	status = "okay";
 	vdda-phy-supply = <&vreg_l4a>;
 	vdda-pll-supply = <&vreg_l3c>;
+};
+
+&lpasscc {
+	status = "disabled";
+};
+
+&lpass_cpu {
+	status = "disabled";
+};
+
+&lpass_hm {
+	status = "disabled";
 };
