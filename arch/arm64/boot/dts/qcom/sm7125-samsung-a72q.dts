@@ -143,11 +143,6 @@
 	};
 };
 
-//Disabled until iommu for UFS found.
-&apps_smmu {
-	status = "disabled";
-};
-
 &tlmm {
 	gpio-reserved-ranges = <59 4>;
 

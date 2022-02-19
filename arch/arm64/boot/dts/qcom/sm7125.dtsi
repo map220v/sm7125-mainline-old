@@ -34,6 +34,8 @@
 		resets = <&gcc GCC_UFS_PHY_BCR>;
 		reset-names = "rst";
 
+		iommus = <&apps_smmu 0xa0 0x0>;
+
 		clock-names =
 			"core_clk",
 			"bus_aggr_clk",
