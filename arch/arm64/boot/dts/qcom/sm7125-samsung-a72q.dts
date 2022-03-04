@@ -47,11 +47,6 @@
 			no-map;
 		};
 
-		ipa_fw_mem: memory@93b00000 {
-			reg = <0x0 0x93b00000 0x0 0x10000>;
-			no-map;
-		};
-
 		ramoops@B4600000 {
 			compatible = "ramoops";
 			reg = <0x0 0xb4600000 0x0 0x100000>;

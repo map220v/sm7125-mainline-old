@@ -128,6 +128,7 @@ struct xfrm_state_walk {
 
 struct xfrm_state_offload {
 	struct net_device	*dev;
+	netdevice_tracker	dev_tracker;
 	struct net_device	*real_dev;
 	unsigned long		offload_handle;
 	unsigned int		num_exthdrs;
@@ -199,6 +200,11 @@ struct xfrm_state {
 	struct xfrm_algo	*calg;
 	struct xfrm_algo_aead	*aead;
 	const char		*geniv;
+
+	/* mapping change rate limiting */
+	__be16 new_mapping_sport;
+	u32 new_mapping;	/* seconds */
+	u32 mapping_maxage;	/* seconds for input SA */
 
 	/* Data for encapsulator */
 	struct xfrm_encap_tmpl	*encap;
@@ -1075,6 +1081,22 @@ xfrm_state_addr_cmp(const struct xfrm_tmpl *tmpl, const struct xfrm_state *x, un
 }
 
 #ifdef CONFIG_XFRM
+static inline bool
+xfrm_default_allow(struct net *net, int dir)
+{
+	u8 def = net->xfrm.policy_default;
+
+	switch (dir) {
+	case XFRM_POLICY_IN:
+		return def & XFRM_POL_DEFAULT_IN ? false : true;
+	case XFRM_POLICY_OUT:
+		return def & XFRM_POL_DEFAULT_OUT ? false : true;
+	case XFRM_POLICY_FWD:
+		return def & XFRM_POL_DEFAULT_FWD ? false : true;
+	}
+	return false;
+}
+
 int __xfrm_policy_check(struct sock *, int dir, struct sk_buff *skb,
 			unsigned short family);
 
@@ -1088,9 +1110,13 @@ static inline int __xfrm_policy_check2(struct sock *sk, int dir,
 	if (sk && sk->sk_policy[XFRM_POLICY_IN])
 		return __xfrm_policy_check(sk, ndir, skb, family);
 
-	return	(!net->xfrm.policy_count[dir] && !secpath_exists(skb)) ||
-		(skb_dst(skb) && (skb_dst(skb)->flags & DST_NOPOLICY)) ||
-		__xfrm_policy_check(sk, ndir, skb, family);
+	if (xfrm_default_allow(net, dir))
+		return (!net->xfrm.policy_count[dir] && !secpath_exists(skb)) ||
+		       (skb_dst(skb) && (skb_dst(skb)->flags & DST_NOPOLICY)) ||
+		       __xfrm_policy_check(sk, ndir, skb, family);
+	else
+		return (skb_dst(skb) && (skb_dst(skb)->flags & DST_NOPOLICY)) ||
+		       __xfrm_policy_check(sk, ndir, skb, family);
 }
 
 static inline int xfrm_policy_check(struct sock *sk, int dir, struct sk_buff *skb, unsigned short family)
@@ -1142,9 +1168,13 @@ static inline int xfrm_route_forward(struct sk_buff *skb, unsigned short family)
 {
 	struct net *net = dev_net(skb->dev);
 
-	return	!net->xfrm.policy_count[XFRM_POLICY_OUT] ||
-		(skb_dst(skb)->flags & DST_NOXFRM) ||
-		__xfrm_route_forward(skb, family);
+	if (xfrm_default_allow(net, XFRM_POLICY_OUT))
+		return !net->xfrm.policy_count[XFRM_POLICY_OUT] ||
+			(skb_dst(skb)->flags & DST_NOXFRM) ||
+			__xfrm_route_forward(skb, family);
+	else
+		return (skb_dst(skb)->flags & DST_NOXFRM) ||
+			__xfrm_route_forward(skb, family);
 }
 
 static inline int xfrm4_route_forward(struct sk_buff *skb)
@@ -1889,7 +1919,7 @@ static inline void xfrm_dev_state_free(struct xfrm_state *x)
 		if (dev->xfrmdev_ops->xdo_dev_state_free)
 			dev->xfrmdev_ops->xdo_dev_state_free(x);
 		xso->dev = NULL;
-		dev_put(dev);
+		dev_put_track(dev, &xso->dev_tracker);
 	}
 }
 #else

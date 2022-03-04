@@ -10,6 +10,7 @@
 #include <asm/ptrace.h>
 #include <asm/syscall.h>
 #include <asm/thread_info.h>
+#include <asm/switch_to.h>
 #include <linux/audit.h>
 #include <linux/ptrace.h>
 #include <linux/elf.h>
@@ -41,12 +42,10 @@ static int riscv_gpr_set(struct task_struct *target,
 			 unsigned int pos, unsigned int count,
 			 const void *kbuf, const void __user *ubuf)
 {
-	int ret;
 	struct pt_regs *regs;
 
 	regs = task_pt_regs(target);
-	ret = user_regset_copyin(&pos, &count, &kbuf, &ubuf, regs, 0, -1);
-	return ret;
+	return user_regset_copyin(&pos, &count, &kbuf, &ubuf, regs, 0, -1);
 }
 
 #ifdef CONFIG_FPU
@@ -55,6 +54,9 @@ static int riscv_fpr_get(struct task_struct *target,
 			 struct membuf to)
 {
 	struct __riscv_d_ext_state *fstate = &target->thread.fstate;
+
+	if (target == current)
+		fstate_save(current, task_pt_regs(current));
 
 	membuf_write(&to, fstate, offsetof(struct __riscv_d_ext_state, fcsr));
 	membuf_store(&to, fstate->fcsr);
