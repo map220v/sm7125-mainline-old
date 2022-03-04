@@ -15,6 +15,7 @@
 #include "pm6150l.dtsi"
 
 /delete-node/ &rmtfs_mem;
+/delete-node/ &ipa_fw_mem;
 
 / {
 	model = "Samsung Galaxy A72";
@@ -47,6 +48,11 @@
 			no-map;
 		};
 
+		ipa_fw_mem: memory@93b00000 {
+			reg = <0x0 0x93b00000 0x0 0x10000>;
+			no-map;
+		};
+
 		ramoops@B4600000 {
 			compatible = "ramoops";
 			reg = <0x0 0xb4600000 0x0 0x100000>;
@@ -62,6 +68,7 @@
 			no-map;
 
 			qcom,client-id = <1>;
+			//qcom,vmid = <15>;
 		};
 	};
 
