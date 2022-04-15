@@ -192,9 +192,10 @@
 };
 
 &dsi0 {
-	status = "disabled";
+	status = "okay";
 
 	panel@0 {
+		status = "disabled";
 		compatible = "samsung,s6e3fc3-ams667ym01";
 		reg = <0>;
 
