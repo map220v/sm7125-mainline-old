@@ -32,7 +32,7 @@
 			reg = <0x0 0x9c000000 0x0 0x01800000>;
 			no-map;
 		};
-
+		
 		mpss_mem: memory@86000000 {
 			reg = <0x0 0x8b000000 0x0 0x8900000>;
 			no-map;
@@ -189,6 +189,44 @@
 			regulator-max-microvolt = <3312000>;
 		};
 	};
+};
+
+&dsi0 {
+	status = "disabled";
+
+	panel@0 {
+		compatible = "samsung,s6e3fc3-ams667ym01";
+		reg = <0>;
+
+		reset-gpios = <&tlmm 8 GPIO_ACTIVE_LOW>;
+
+		port {
+			panel_in: endpoint {
+				remote-endpoint = <&dsi0_out>;
+			};
+		};
+	};
+};
+
+&dsi0_out {
+	remote-endpoint = <&panel_in>;
+	data-lanes = <0 1 2 3>;
+};
+
+&dsi_phy {
+	status = "okay";
+};
+
+&mdp {
+	status = "okay";
+};
+
+&mdss {
+	status = "okay";
+};
+
+&gpu {
+	status = "disabled";
 };
 
 &tlmm {
