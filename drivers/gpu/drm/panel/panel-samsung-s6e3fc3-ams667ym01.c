@@ -35,13 +35,13 @@ struct s6e3fc3_ams667ym01 *to_s6e3fc3_ams667ym01(struct drm_panel *panel)
 			return ret;					\
 	} while (0)
 
-static void s6e3fc3_ams667ym01_reset(struct s6e3fc3_ams667ym01 *ctx)
+/*static void s6e3fc3_ams667ym01_reset(struct s6e3fc3_ams667ym01 *ctx)
 {
 	gpiod_set_value_cansleep(ctx->reset_gpio, 1);
 	usleep_range(10000, 11000);
 	gpiod_set_value_cansleep(ctx->reset_gpio, 0);
 	usleep_range(10000, 11000);
-}
+}*/
 
 static int s6e3fc3_ams667ym01_on(struct s6e3fc3_ams667ym01 *ctx)
 {
@@ -128,7 +128,7 @@ static int s6e3fc3_ams667ym01_prepare(struct drm_panel *panel)
 	if (ctx->prepared)
 		return 0;
 
-	s6e3fc3_ams667ym01_reset(ctx);
+	//s6e3fc3_ams667ym01_reset(ctx);
 
 	ret = s6e3fc3_ams667ym01_on(ctx);
 	if (ret < 0) {
@@ -264,10 +264,10 @@ static int s6e3fc3_ams667ym01_probe(struct mipi_dsi_device *dsi)
 	if (!ctx)
 		return -ENOMEM;
 
-	ctx->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
+	/*ctx->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
 	if (IS_ERR(ctx->reset_gpio))
 		return dev_err_probe(dev, PTR_ERR(ctx->reset_gpio),
-				     "Failed to get reset-gpios\n");
+				     "Failed to get reset-gpios\n");*/
 
 	ctx->dsi = dsi;
 	mipi_dsi_set_drvdata(dsi, ctx);
