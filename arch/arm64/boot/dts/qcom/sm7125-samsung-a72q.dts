@@ -27,11 +27,6 @@
 		#address-cells = <2>;
 		#size-cells = <2>;
 		ranges;
-
-		framebuffer_region@9c000000 {
-			reg = <0x0 0x9c000000 0x0 0x01800000>;
-			no-map;
-		};
 		
 		mpss_mem: memory@86000000 {
 			reg = <0x0 0x8b000000 0x0 0x8900000>;
@@ -82,25 +77,6 @@
 		#address-cells = <2>;
 		#size-cells = <2>;
 		ranges;
-		framebuffer@9c000000 {
-			compatible = "simple-framebuffer";
-			reg = <0x0 0x9c000000 0x0 (1080 * 2400 * 4)>;
-			width = <1080>;
-			height = <2400>;
-			stride = <(1080 * 4)>;
-			format = "a8r8g8b8";
-			/*
-			 * That's a lot of clocks, but it's necessary due
-			 * to unused clk cleanup & no panel driver yet..
-			 */
-			clocks = <&gcc GCC_DISP_HF_AXI_CLK>,
-				 <&dispcc DISP_CC_MDSS_BYTE0_CLK>,
-				 <&dispcc DISP_CC_MDSS_BYTE0_INTF_CLK>,
-				 <&dispcc DISP_CC_MDSS_MDP_CLK>,
-				 <&dispcc DISP_CC_MDSS_PCLK0_CLK>,
-				 <&dispcc DISP_CC_MDSS_VSYNC_CLK>;
-			power-domains = <&dispcc MDSS_GDSC>;
-		};
 	};
 };
 
@@ -195,11 +171,11 @@
 	status = "okay";
 
 	panel@0 {
-		status = "disabled";
+		status = "okay";
 		compatible = "samsung,s6e3fc3-ams667ym01";
 		reg = <0>;
 
-		reset-gpios = <&tlmm 8 GPIO_ACTIVE_LOW>;
+		reset-gpios = <&tlmm 8 GPIO_ACTIVE_HIGH>;
 
 		port {
 			panel_in: endpoint {
