@@ -1288,12 +1288,8 @@ static void sm7125_cfg_init(struct dpu_mdss_cfg *dpu_cfg)
 		.mixer = sc7180_lm,
 		.dspp_count = ARRAY_SIZE(sc7180_dspp),
 		.dspp = sc7180_dspp,
-		// sm7125_pp might be wrong but it fixes "invalid IRQ index:-1" errors 
-		// and makes errors like "*ERROR* failed wait_for_idle: id:31 ret:-110 pp:0" after "[dpu error]enc31 frame done timeout"
-		/*.pingpong_count = ARRAY_SIZE(sm7125_pp),
-		.pingpong = sm7125_pp,*/
-		.pingpong_count = ARRAY_SIZE(sc7180_pp),
-		.pingpong = sc7180_pp,
+		.pingpong_count = ARRAY_SIZE(sm7125_pp),
+		.pingpong = sm7125_pp,
 		.intf_count = ARRAY_SIZE(sc7180_intf),
 		.intf = sc7180_intf,
 		.vbif_count = ARRAY_SIZE(sdm845_vbif),
