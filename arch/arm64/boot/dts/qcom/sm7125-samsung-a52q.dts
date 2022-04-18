@@ -355,7 +355,7 @@
 	status = "okay";
 
 	memory-region = <&ipa_fw_mem>;
-	firmware-name = "qcom/sm7125/a72q/ipa_fws.mdt";
+	firmware-name = "qcom/sm7125/a52q/ipa_fws.mdt";
 };
 
 &wifi {
@@ -390,7 +390,7 @@
 
 &remoteproc_mpss {
 	status = "okay";
-	firmware-name = "qcom/sm7125/a72q/modem.mdt";
+	firmware-name = "qcom/sm7125/a52q/modem.mdt";
 };
 
 &qupv3_id_0 {
@@ -414,7 +414,7 @@
 	bluetooth: bluetooth {
 		compatible = "qcom,wcn3990-bt";
 
-		firmware-name = "sm7125/a72q/crnv21.bin";
+		firmware-name = "sm7125/a52q/crnv21.bin";
 
 		vddio-supply = <&vreg_l10a>;
 		vddxo-supply = <&vreg_l1c>;
